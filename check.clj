@@ -1,15 +1,36 @@
 (ns spekl-package-manager.check
  (:require [clojure.java.io :as io]
-            [clojure.tools.logging :as log]))
+            [clojure.tools.logging :as log]
+            [spekl-package-manager.util :as util]
+            [spekl-package-manager.constants :as constants]
+            [spekl-package-manager.download :as download]
+            [spekl-package-manager.package :as package]
+            [clojure.core.reducers :as r]
+            [org.satta.glob :as glob]
+            [clojure.string :as string]
+            [clojure.java.shell :as shell]
+            )
 
-;;
-;; All checks must at least define a "default" check and can optionally define any number of named checks.
-;;
+  )
+
+(defn get-classpath-sep []
+  (if (.equals (util/get-my-platform) "windows")
+    ";"
+    ":"))
+
+(defn configure-classpath []
+  (let [cp (*check-configuration* :classpath)]
+    (if (= nil cp)
+      "."
+      (string/join (get-classpath-sep) (util/expand-glob cp)))))
+
+
 (defcheck default
-  ;; Printing a log message...
-  (log/info  "A message")
+  ;; run the check
+  (log/info  "Running OpenJML in RAC Mode...")
 
-  ;; running a check
-  (log/info  "Running a check.")  
-  (run "cmd" "arg1" "${installed-package:asset.jar}" "-esc" *project-files-string* ))
+  ;; see if they want to modify the classpath
 
+  (log/info "SPECS!" *specs*)
+  
+  (run "java"  "-jar" "${openjml:openjml.jar}" "-classpath" (str "\"" (configure-classpath) "\"")  "-esc" *project-files* ))
