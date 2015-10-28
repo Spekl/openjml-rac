@@ -43,14 +43,20 @@
   (if (not (= nil (*check-configuration* :out)))
     (list "-d" (*check-configuration* :out))))
 
+(defn get-cp-quote []
+  (if (.equals (util/get-my-platform) "windows")
+    "\""
+    "")
+  )
+
 (defn get-classpath [extra]
   (if (= nil (*check-configuration* :out))
-    (list  "-classpath" (str "\"" (configure-classpath extra)  "\""))
-    (list  "-classpath" (str "\"" (configure-classpath extra) (get-classpath-sep) (*check-configuration* :out) "\""))))
+    (list  "-classpath" (str (get-cp-quote) (configure-classpath extra)  (get-cp-quote)))
+    (list  "-classpath" (str (get-cp-quote) (configure-classpath extra) (get-classpath-sep) (*check-configuration* :out) (get-cp-quote)))))
 
 (defn get-specspath []
   (if (has-specs)
-    (list  "-specspath" (str "\"" (configure-specspath) "\""))))
+    (list  "-specspath" (str (get-cp-quote) (configure-specspath) (get-cp-quote)))))
 
 ;; figure out the outdir, classpath, specspath 
 (defn get-extra-args []
