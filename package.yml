@@ -1,5 +1,5 @@
 name       : openjml-rac            # name of the package
-version    : 1.7.3.20150406-3       # version of the package
+version    : 1.8.19.20170726        # version of the package
 kind       : tool                   # one of tool or spec(s)
 description: The Runtime Assertion Checker for OpenJML.
 
@@ -10,11 +10,11 @@ author:
 
 assumes:
   - cmd: java -version
-    matches: java version "1.7.*
-    message: "Please install Java 1.7 to use OpenJML."
+    matches: java version "1.8.*
+    message: "Please install Java 1.8 to use OpenJML."
     platform: all
 
 depends:                               
   - package   : openjml
-    version   : ">= 1.7.3 && < 1.8"
+    version   : ">= 1.8.0 && < 1.9"
     platform  : all
